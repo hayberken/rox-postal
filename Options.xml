@@ -1,0 +1,26 @@
+<?xml version='1.0'?>
+<options>
+  <section title='Postal'>
+    <entry name='server' label='Server'>
+      The hostname or IP address of your IMAP server.
+    </entry>
+    <entry name='port' label='Port'>
+      The TCP port of your IMAP server.
+    </entry>
+    <entry name='username' label='User Name'>
+      The user name for logging in to your IMAP account.
+    </entry>
+    <secretentry name='password' label='Password' char='*'>
+      Your account password.
+    </secretentry>
+    <entry name='mailboxes' label='Mailboxes'>
+      A comma separated list of mailbox names to check (e.g. Inbox, Junk, Sent)
+    </entry>
+    <numentry name='polltime' label='Polling Time' min='1' max='120'>
+      How many minutes between checking mailboxes.
+    </numentry>
+    <entry name='mailer' label='Mail application'>
+      The command to run your mail client (e.g. thunderbird, evolution, mozilla, etc.)
+    </entry>
+  </section>
+</options>

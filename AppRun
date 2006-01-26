@@ -1,0 +1,23 @@
+#!/usr/bin/env python
+
+import findrox; findrox.version(2, 0, 0)
+import rox, os, sys, gtk
+
+__builtins__._ = rox.i18n.translation(os.path.join(rox.app_dir, 'Messages'))
+
+if len(sys.argv) > 1:
+	try:
+		import postal
+		main = postal.IMAPCheck(sys.argv[1])
+		main.show_all()
+	except:
+		rox.report_exception()
+else:
+	rox.info(_("This is a panel applet.  Drag it to your panel to run it.\nI'll now let you edit the configuration options..."))
+	try:
+		import postal
+		rox.edit_options()
+	except:
+		rox.report_exception()
+
+rox.mainloop()

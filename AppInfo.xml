@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<AppInfo>
+  <Summary>Mail Checker.</Summary>
+  <About>
+    <Purpose>Mail Checker</Purpose>
+    <Version>001</Version>
+    <Authors>
+      Ken Hayber
+    </Authors>
+    <License>GNU General Public License</License>
+    <Homepage>http://www.hayber.us/rox/applets</Homepage>
+  </About>
+</AppInfo>
