@@ -3,21 +3,24 @@
 import findrox; findrox.version(2, 0, 0)
 import rox, os, sys, gtk
 
-__builtins__._ = rox.i18n.translation(os.path.join(rox.app_dir, 'Messages'))
+try:
+	__builtins__._ = rox.i18n.translation(os.path.join(rox.app_dir, 'Messages'))
 
-if len(sys.argv) > 1:
-	try:
-		import postal
-		main = postal.IMAPCheck(sys.argv[1])
-		main.show_all()
-	except:
-		rox.report_exception()
-else:
-	rox.info(_("This is a panel applet.  Drag it to your panel to run it.\nI'll now let you edit the configuration options..."))
-	try:
-		import postal
-		rox.edit_options()
-	except:
-		rox.report_exception()
+	from optparse import OptionParser
 
-rox.mainloop()
+	parser = OptionParser()
+	parser.add_option("--options",
+		action="store_true", dest="options", default=False,
+		help="display options dialog")
+		
+	(options, args) = parser.parse_args()
+
+	if not options.options:
+		rox.info(_("This is a panel applet.  Drag it to your panel to run it.\nI'll now let you edit the configuration options..."))
+
+	import postal
+	rox.edit_options()
+	rox.mainloop()
+
+except:
+	rox.report_exception()

@@ -22,5 +22,8 @@
     <entry name='mailer' label='Mail application'>
       The command to run your mail client (e.g. thunderbird, evolution, mozilla, etc.)
     </entry>
+    <entry name='sound' label='Sound'>
+      Command to play a sound when new mail arrives.
+    </entry>
   </section>
 </options>

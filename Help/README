@@ -5,9 +5,13 @@
 Brief
 ~~~~~
 Other Mail applets for ROX only check local mailboxes (e.g. /var/mail/username).
+I wanted one to check my IMAP folders, so this is it.
 
-I wanted one to check my IMAP folders, so this is it.  See the TODO file for 
-possible future additions.
+Postal simply reports the unseen and total message counts for each requested
+folder in a tooltip.  It changes its icon when any unseen messages are found.
+
+See the TODO file for possible future additions.
+
 
 Conditions
 ~~~~~~~~~~
