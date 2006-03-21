@@ -154,8 +154,11 @@ class IMAPCheck(applet.Applet):
 			self.pixbuf = self.nomail
 		self.resize_image(self.size)
 
-		try: im.close()
-		except: pass
+		try:
+			im.logout()
+			im.close()
+		except:
+			pass
 		
 		self.update = gobject.timeout_add(POLLTIME.int_value * 60000, self.checkit)
 		
