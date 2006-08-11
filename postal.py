@@ -146,8 +146,12 @@ class IMAPCheck(applet.Applet):
 			if count > 0:
 				results += "%s (%d/%d)\n" % (mailbox, unseen, count)
 			yield None
-					
-		self.tooltips.set_tip(self, str(results[:-1]), tip_private=None)
+		
+		if len(results):
+			self.tooltips.set_tip(self, str(results[:-1]), tip_private=None)
+		else:
+			self.tooltips.set_tip(self, _('No Mail'), tip_private=None)
+			
 		if self.total_unseen:
 			self.pixbuf = self.ismail
 		else:
@@ -155,14 +159,14 @@ class IMAPCheck(applet.Applet):
 		self.resize_image(self.size)
 
 		try:
-			im.logout()
 			im.close()
+			im.logout()
 		except:
 			pass
 		
 		self.update = gobject.timeout_add(POLLTIME.int_value * 60000, self.checkit)
 		
-		if len(SOUND.value) and self.total_unseen > self.prev_total:
+		if len(SOUND.value) and (self.total_unseen > self.prev_total):
 			tasks.Task(self.play_sound())
 		self.prev_total = self.total_unseen
 		
