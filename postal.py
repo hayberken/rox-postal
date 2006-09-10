@@ -19,57 +19,55 @@
 """
 
 # standard library modules
-import sys, os, time, gtk, gobject, rox, getpass, pango, popen2
-from rox import applet, filer, tasks
+import sys, os, time, gtk, gobject, rox, getpass, popen2, ConfigParser
+from rox import applet, filer, tasks, basedir
 from rox.options import Option
+from rox.tasks import *
 
 # globals
 APP_NAME = 'Postal'
+APP_SITE = 'hayber.us'
 APP_DIR = rox.app_dir
 APP_SIZE = [28, 28]
+APP_CFG = 'Accounts.ini'
+
+
+HAVE_NOTIFY = False
+try:
+	import pynotify
+	if pynotify.init(APP_NAME):
+		HAVE_NOTIFY = True
+except:
+	pass
+
 
 # Options.xml processing
 from rox import Menu
-rox.setup_app_options(APP_NAME, site='hayber.us')
-Menu.set_save_name(APP_NAME, site='hayber.us')
+rox.setup_app_options(APP_NAME, site=APP_SITE)
+Menu.set_save_name(APP_NAME, site=APP_SITE)
 
 #Options go here
-SERVER = Option('server', 'localhost')
-PORT = Option('port', '143')
-MAILBOXES = Option('mailboxes', 'Inbox')
-POLLTIME = Option('polltime', 10)
-USERNAME = Option('username', getpass.getuser())
-PASSWORD = Option('password', '')
 MAILER = Option('mailer', 'thunderbird')
 SOUND = Option('sound', '')
 
 #Enable notification of options changes
 rox.app_options.notify()
 
-def which(filename):
-	"""Return the full path of an executable if found on the path"""
-	if (filename == None) or (filename == ''):
-		return None
 
-	env_path = os.getenv('PATH').split(':')
-	for p in env_path:
-		if os.access(p+'/'+filename, os.X_OK):
-			return p+'/'+filename
-	return None
+#Configure mailbox handling
+import imap_check, pop_check, mbox_check
+CHECKERS = {
+	'IMAP':imap_check.IMAPChecker,
+	'POP':pop_check.POPChecker,
+	'MBOX':mbox_check.MBOXChecker,
+}
 
 
-import imaplib
-
-class IMAPCheck(applet.Applet):
+class Postal(applet.Applet):
 	"""An Applet (no, really)"""
-	
-	total_unseen = 0
-	prev_total = 0
-	size = 0
 
 	def __init__(self, id):
 		"""Initialize applet."""
-
 		applet.Applet.__init__(self, id)
 
 		# load the applet icon
@@ -78,6 +76,7 @@ class IMAPCheck(applet.Applet):
 		self.errimg = gtk.gdk.pixbuf_new_from_file(os.path.join(APP_DIR, 'images', 'error.svg'))
 		self.ismail = gtk.gdk.pixbuf_new_from_file(os.path.join(APP_DIR, 'images', 'mail.svg'))
 		self.pixbuf = self.nomail 
+		self.size = 0
 		self.resize_image(8)
 		self.add(self.image)
 		
@@ -99,124 +98,166 @@ class IMAPCheck(applet.Applet):
 		self.connect('size-allocate', self.resize)
 		self.connect('delete_event', self.quit)
 		rox.app_options.add_notify(self.get_options)
-		
-		self.checkit()
-		
-	def checkit(self):
-		tasks.Task(self.check_mail())
-		
-	def check_mail(self):
-		""" """
+
+		# build the mailbox list
 		try:
-			im = imaplib.IMAP4(SERVER.value)
-			im.login(USERNAME.value, PASSWORD.value)
+			self.load_accounts()
 		except:
-			self.tooltips.set_tip(self, _("Error"), tip_private=None)
-			self.pixbuf = self.errimg
-			self.resize_image(self.size)
-			self.update = gobject.timeout_add(POLLTIME.int_value * 60000, self.checkit)
-			return #don't care, we'll try again later
-		
-		mailboxes = MAILBOXES.value.split(',')
+			rox.info(_("Problem loading accounts.  Launching Account Editor..."))
+			self.edit_accounts()
+
+		# start the main task
+		Task(self.check_mail())
+
+
+	def load_accounts(self):
+		"""Load all accounts from config file as dictionaries"""
+		self.mailboxes = []
+
+		filename = os.path.join(basedir.save_config_path(APP_SITE, APP_NAME), APP_CFG)
+		if not os.access(filename, os.R_OK or os.W_OK):
+			raise IOError
+		cfg = ConfigParser.ConfigParser()
+		cfg.read(filename)
+
+		for section in cfg.sections():
+			config = {}
+			for item in cfg.items(section):
+				config[item[0]] = item[1]
+			self.mailboxes.append(CHECKERS[config['protocol']](config))
+
+
+	def edit_accounts(self):
+		"""Edit the accounts config file (just a text editor for now)"""
+		filename = os.path.join(basedir.save_config_path(APP_SITE, APP_NAME), APP_CFG)
+		if not os.access(filename, os.R_OK or os.W_OK):
+			os.system("cp %s %s" % (os.path.join(APP_DIR, APP_CFG), filename))
+		rox.filer.spawn_rox((filename,))
+
+
+	def check_mail(self):
+		"""
+		This is the main task for the applet.  It's job is to gather results 
+		from each mailbox checker and update the UI.  It does this periodically
+		based on the polltime. Each time we wake up from the timeout, we fire 
+		all checker tasks and then yield on their blockers. As each blocker
+		triggers, we wake up again and process the results.  In some cases more
+		than one blocker may have triggered, so we update the UI for all 
+		blocker.happened.
+		"""
+		def timeout(mailbox):
+			return mailbox.blocker.happened and isinstance(mailbox.blocker, TimeoutBlocker)
+
+		while True:
+			blockers = []
+			for mailbox in self.mailboxes:
+				if (mailbox.blocker is None) or timeout(mailbox):
+					mailbox.blocker = Blocker()
+					Task(mailbox.check())
+				elif mailbox.blocker.happened:
+					self.update(mailbox)
+					mailbox.blocker = TimeoutBlocker(mailbox.polltime * 60)
+				blockers.append(mailbox.blocker)
+
+			# in case there are no accounts, sleep for 10 seconds			
+			if not len(blockers):
+				blockers.append(TimeoutBlocker(10))
+
+			yield blockers
+
+
+	def force_check(self):
+		"""Trigger all pending TimeoutBlockers."""
+		for mailbox in self.mailboxes:
+			if mailbox.blocker and not mailbox.blocker.happened:
+				if isinstance(mailbox.blocker, TimeoutBlocker):
+					mailbox.blocker.trigger()
+
+
+	def update(self, mailbox):
+		"""Update the display"""
+		unseen = 0			
 		results = ""
-		self.total_unseen = 0
-		
-		for mailbox in mailboxes:
-			mailbox = mailbox.strip()
-			result = im.select(mailbox, readonly=True)
-			if result[0] == 'OK':
-				if result[1][0] == '':
-					count = 0
-				else:
-					count = int(result[1][0])
-			else:
-				count = -1
-			if count == -1:
-				yield None
-				
-			result = im.search(None, "UNSEEN")
-			if result[0] == 'OK':
-				if result[1][0] == '':
-					unseen = 0
-				else:
-					unseen = len(result[1][0].split())
-					self.total_unseen += unseen
-			else:
-				unseen = -1
-			if count > 0:
-				results += "%s (%d/%d)\n" % (mailbox, unseen, count)
-			yield None
-		
-		if len(results):
-			self.tooltips.set_tip(self, str(results[:-1]), tip_private=None)
-		else:
-			self.tooltips.set_tip(self, _('No Mail'), tip_private=None)
-			
-		if self.total_unseen:
+		for box in self.mailboxes:
+			results += box.results
+			unseen += box.unseen
+
+		if not len(results):
+			results = _("No Mail")
+		self.tooltips.set_tip(self, results.strip(), tip_private=None)
+
+		if unseen:
 			self.pixbuf = self.ismail
 		else:
 			self.pixbuf = self.nomail
 		self.resize_image(self.size)
 
-		try:
-			im.close()
-			im.logout()
-		except:
-			pass
+		if mailbox.unseen > mailbox.prev_total:
+			if HAVE_NOTIFY:
+				n = pynotify.Notification(_("New Mail has arrived."), mailbox.results, "mail-message-new")
+				n.add_action("mailer", _("Read Mail"), self.run_it)
+				n.show()
+			if len(SOUND.value):
+				Task(self.play_sound())
 		
-		self.update = gobject.timeout_add(POLLTIME.int_value * 60000, self.checkit)
+		# don't report the same 'new' mail again
+		mailbox.prev_total = mailbox.unseen
+
+	
+	def run_it(self, *action):
+		"""Run the Mailer command."""
+
+		def which(filename):
+			"""Return the full path of an executable if found on the path"""
+			if (filename == None) or (filename == ''):
+				return None
 		
-		if len(SOUND.value) and (self.total_unseen > self.prev_total):
-			tasks.Task(self.play_sound())
-		self.prev_total = self.total_unseen
-		
-	def run_it(self):
-		"""Open the given file with ROX."""
+			env_path = os.getenv('PATH').split(':')
+			for p in env_path:
+				if os.access(p+'/'+filename, os.X_OK):
+					return p+'/'+filename
+			return None		
+
 		try:
 			rox.filer.spawn_rox((which(MAILER.value),))
 		except:
 			rox.report_exception()
 
+
 	def resize(self, widget, rectangle):
 		"""Called when the panel sends a size."""
-
 		if self.vertical:
-			size = rectangle[2]
+			size = rectangle[2] -2
 		else:
-			size = rectangle[3]
+			size = rectangle[3] -2
 		if size != self.size:
 			self.resize_image(size)
+
 
 	def resize_image(self, size):
 		"""Resize the application image."""
 		scaled_pixbuf = self.pixbuf.scale_simple(size, size, gtk.gdk.INTERP_BILINEAR)
 		self.image.set_from_pixbuf(scaled_pixbuf)
 		self.size = size
+
 		
 	def play_sound(self):
 		"""Play a sound"""
 		process = popen2.Popen3(SOUND.value)
-		yield tasks.InputBlocker(process.fromchild)
+		# let stuff happen while playing the sound (the command must write to stdout)
+		yield InputBlocker(process.fromchild)
 		process.wait()
-		
 
-#draw the total new mail count on top of the icon		
-#		if self.window:
-#			gc = self.window.new_gc() 
-#			layout = self.create_pango_layout('')
-#			layout.set_markup("<b>%d</b>" % self.total_unseen)
-#			self.window.draw_layout(gc, 3, 3, layout, gtk.gdk.color_parse("black"), None)
-#			self.window.draw_layout(gc, 2, 2, layout, gtk.gdk.color_parse("red"), None)
 		
-
 	def button_press(self, window, event):
 		"""Handle mouse clicks by popping up the matching menu."""
 		if event.button == 1:
 			self.run_it()
 		elif event.button == 2:
-			self.checkit()
+			self.force_check()
 		elif event.button == 3:
 			self.appmenu.popup(self, event, self.position_menu)
+
 
 	def get_panel_orientation(self):
 		""" Return panel orientation and margin for displaying a popup menu.
@@ -231,32 +272,39 @@ class IMAPCheck(applet.Applet):
 			side, margin = None, 2
 		return side
 
+
 	def get_options(self, widget=None, rebuild=False, response=False):
 		"""Used as the notify callback when options change."""
 		pass
+
 
 	def show_options(self, button=None):
 		"""Open the options edit dialog."""
 		rox.edit_options()
 
-	def get_info(self):
-		"""Display an InfoWin box."""
-		from rox import InfoWin
-		InfoWin.infowin(APP_NAME)
-		
+
 	def build_appmenu(self):
 		"""Build the right-click app menu."""
 		items = []
-		items.append(Menu.Action(_('Check mail'), 'checkit', '', gtk.STOCK_REFRESH))
+		items.append(Menu.Action(_('Check mail'), 'force_check', '', gtk.STOCK_REFRESH))
 		items.append(Menu.Action(_('Mail Client'), 'run_it', '', gtk.STOCK_EXECUTE))
 		items.append(Menu.Separator())
-		items.append(Menu.Action(_('Info...'), 'get_info', '', gtk.STOCK_DIALOG_INFO))
 		items.append(Menu.Action(_('Options...'), 'show_options', '', gtk.STOCK_PREFERENCES))
+		items.append(Menu.Action(_('Accounts...'), 'edit_accounts', ''))
+		items.append(Menu.Action(_('Reload...'), 'load_accounts', ''))
 		items.append(Menu.Separator())
 		items.append(Menu.Action(_('Close'), 'quit', '', gtk.STOCK_CLOSE))
 		self.appmenu = Menu.Menu('other', items)
 		self.appmenu.attach(self, self)
 
+
 	def quit(self, *args):
 		"""Quit applet and close everything."""
+
+		# TimeoutBlockers won't let the app exit while they are waiting...
+		for mailbox in self.mailboxes:
+			if mailbox.blocker and not mailbox.blocker.happened:
+				if isinstance(mailbox.blocker, TimeoutBlocker):
+					rox.toplevel_unref()
+
 		self.destroy()

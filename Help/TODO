@@ -1,9 +1,7 @@
 TODO items for Postal
 
-* Support multiple accounts?
-* Supprt POP mailboxes?
-* Support local (/var/mail/) accounts?
+* Support multiple accounts? (done)
+* Supprt POP mailboxes? (done)
+* Support local (/var/mail/) accounts? (done)
 
-* Animate icon when new mail is waiting?
-* Display total new mail count overlay on icon (like Mac OS X Mail)?
-
+* Account editor

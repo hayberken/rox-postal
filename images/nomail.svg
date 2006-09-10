@@ -9,9 +9,9 @@
    xmlns:sodipodi="http://inkscape.sourceforge.net/DTD/sodipodi-0.dtd"
    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
    sodipodi:docname="nomail.svg"
-   sodipodi:docbase="/home/khayber/Apps/Applets/Postal/images"
+   sodipodi:docbase="/home/ken/Apps/Applets/Postal/images"
    version="1.0"
-   inkscape:version="0.41"
+   inkscape:version="0.43"
    sodipodi:version="0.32"
    id="svg2"
    height="32pt"
@@ -25,9 +25,9 @@
      inkscape:window-width="1024"
      inkscape:current-layer="layer1"
      inkscape:document-units="px"
-     inkscape:cy="20.000000"
-     inkscape:cx="20.000000"
-     inkscape:zoom="13.450000"
+     inkscape:cy="20"
+     inkscape:cx="20"
+     inkscape:zoom="13.45"
      inkscape:pageshadow="2"
      inkscape:pageopacity="0"
      borderopacity="1.0"
@@ -36,15 +36,11 @@
      id="base" />
   <metadata
      id="metadata7">
-    <rdf:RDF
-       id="RDF6">
+    <rdf:RDF>
       <cc:Work
-         id="Work8"
          rdf:about="">
-        <dc:format
-           id="format10">image/svg+xml</dc:format>
+        <dc:format>image/svg+xml</dc:format>
         <dc:type
-           id="type12"
            rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
       </cc:Work>
     </rdf:RDF>
@@ -56,12 +52,12 @@
     <path
        sodipodi:nodetypes="ccccccccsscc"
        id="path1305"
-       d="M 2.762539,20.467942 L 2.762539,29.891954 C 2.762539,31.376619 3.9855496,32.571854 5.5047153,32.571854 L 35.262408,32.571854 C 36.781574,32.571854 38.004584,31.376619 38.004584,29.891954 L 38.004584,14.110316 C 38.004584,12.625651 36.781574,11.430415 35.262408,11.430415 L 5.5047153,11.430415 C 3.6609603,11.379251 2.6966391,12.194572 2.8326892,13.771801 C 2.902201,14.57765 2.7927824,13.44821 2.8880143,14.450121 C 2.9200352,14.787005 19.677929,23.303228 19.677929,23.303228 L 33.231165,16.161033"
-       style="opacity:0.5;fill:none;fill-opacity:1;stroke:#000000;stroke-width:1.967641;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
+       d="M 5.7067481,19.947496 L 5.7067481,29.371508 C 5.7067481,30.856173 6.7450171,32.051408 8.0347056,32.051408 L 33.297356,32.051408 C 34.587045,32.051408 35.625313,30.856173 35.625313,29.371508 L 35.625313,13.58987 C 35.625313,12.105205 34.587045,10.909969 33.297356,10.909969 L 8.0347056,10.909969 C 6.4694586,10.858805 5.6508027,11.674126 5.7663018,13.251355 C 5.8253135,14.057204 5.7324231,12.927764 5.8132698,13.929675 C 5.8404538,14.266559 20.066987,22.782782 20.066987,22.782782 L 31.572942,15.640587"
+       style="opacity:0.5;fill:none;fill-opacity:1;stroke:#000000;stroke-width:1.81294942;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
     <path
        sodipodi:nodetypes="ccccccccsscc"
        id="rect3055"
-       d="M 1.5768487,19.245962 L 1.5768487,28.669974 C 1.5768487,30.154639 2.7908467,31.349874 4.2988172,31.349874 L 33.837218,31.349874 C 35.345189,31.349874 36.559187,30.154639 36.559187,28.669974 L 36.559187,12.888336 C 36.559187,11.403671 35.345189,10.208435 33.837218,10.208435 L 4.2988172,10.208435 C 2.4686493,10.157271 1.5114344,10.972592 1.6464819,12.549821 C 1.7154815,13.35567 1.6068692,12.22623 1.7013993,13.228141 C 1.7331842,13.565025 18.367585,22.081248 18.367585,22.081248 L 31.820944,14.939053"
-       style="fill:none;fill-opacity:1;stroke:#000000;stroke-width:1.96037757;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
+       d="M 4.700162,18.725516 L 4.700162,28.149528 C 4.700162,29.634193 5.7307798,30.829428 7.0109641,30.829428 L 32.087448,30.829428 C 33.367633,30.829428 34.39825,29.634193 34.39825,28.149528 L 34.39825,12.36789 C 34.39825,10.883225 33.367633,9.6879889 32.087448,9.6879889 L 7.0109641,9.6879889 C 5.4572519,9.6368249 4.6446288,10.452146 4.7592768,12.029375 C 4.8178537,12.835224 4.7256478,11.705784 4.8058986,12.707695 C 4.8328823,13.044579 18.954577,21.560802 18.954577,21.560802 L 30.375742,14.418607"
+       style="fill:none;fill-opacity:1;stroke:#505050;stroke-width:1.80625701;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
   </g>
 </svg>

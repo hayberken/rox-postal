@@ -8,7 +8,7 @@ try:
 	
 	if len(sys.argv) > 1:
 		import postal
-		main = postal.IMAPCheck(sys.argv[1])
+		main = postal.Postal(sys.argv[1])
 		main.show_all()
 	else:
 		rox.info(_("This is a panel applet.  Drag it to your panel to run it.\nI'll now let you edit the configuration options..."))
