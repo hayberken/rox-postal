@@ -27,8 +27,7 @@ class IMAPChecker(Checker):
 				im = imaplib.IMAP4(self.server, self.port)
 			im.login(self.username, self.password)
 		except:
-			raise
-			self.results = _('Login Error')
+			self.results = "%s (%s)\n" % (self.name, _('Login Error'))
 			self.blocker.trigger()
 			return
 

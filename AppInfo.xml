@@ -5,12 +5,12 @@
 			<Label xml:lang="en">Options...</Label>
 		</Item>
 	</AppMenu>
-	<Summary>Mail Checker.</Summary>
+	<Summary>Mailbox Checker</Summary>
 	<About>
-		<Purpose>Mail Checker</Purpose>
+		<Purpose>An applet to monitor multiple mailboxes</Purpose>
 		<Version>003</Version>
 		<Authors>Ken Hayber</Authors>
 		<License>GNU General Public License</License>
-		<Homepage>http://www.hayber.us/rox/applets</Homepage>
+		<Homepage>http://www.hayber.us/rox/Postal</Homepage>
 	</About>
 </AppInfo>

@@ -194,7 +194,8 @@ class Postal(applet.Applet):
 
 		if mailbox.unseen > mailbox.prev_total:
 			if HAVE_NOTIFY:
-				n = pynotify.Notification(_("New Mail has arrived."), mailbox.results, "mail-message-new")
+				n = pynotify.Notification(_("New Mail has arrived."), 
+								mailbox.results.strip(), "mail-message-new")
 				n.add_action("mailer", _("Read Mail"), self.run_it)
 				n.show()
 			if len(SOUND.value):

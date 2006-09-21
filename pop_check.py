@@ -36,7 +36,7 @@ class POPChecker(Checker):
 				pop.user(self.username)
 				pop.pass_(self.password)
 		except:
-			self.results = "Error"
+			self.results = "%s (%s)\n" % (self.name, _('Login Error'))
 			self.blocker.trigger()
 			return
 
