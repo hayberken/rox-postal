@@ -9,14 +9,23 @@ import imaplib, sys
 from checker import Checker
 
 class IMAPChecker(Checker):
-	def __init__(self, config):
+	def __init__(self, config=None):
 		Checker.__init__(self, config)
-		self.server = config['server']
-		self.port = int(config['port'])
-		self.ssl = (config['ssl'] == 'True')
-		self.username = config['username']
-		self.password = config['password']
-		self.folders = config['folders'].split(',')
+		self.protocol = 'IMAP'
+		try:
+			self.server = config['server']
+			self.port = int(config['port'])
+			self.ssl = (config['ssl'] == 'True')
+			self.username = config['username']
+			self.password = config['password']
+			self.folders = config['folders'].split(',')
+		except:
+			self.server = 'localhost'
+			self.port = 143
+			self.ssl = False
+			self.username = ''
+			self.password = ''
+			self.folders = []
 
 	def check(self):
 		"""Check all folders"""

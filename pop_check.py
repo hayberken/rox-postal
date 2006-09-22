@@ -9,14 +9,23 @@ import poplib, sys
 
 from checker import Checker
 class POPChecker(Checker):
-	def __init__(self, config):
-		Checker.__init__(self, config)		
-		self.server = config['server']
-		self.port = int(config['port'])
-		self.username = config['username']
-		self.password = config['password']
-		self.ssl = (config['ssl'] == 'True')
-		self.apop = (config['apop'] == 'True')
+	def __init__(self, config=None):
+		Checker.__init__(self, config)
+		self.protocol = 'POP'
+		try:
+			self.server = config['server']
+			self.port = int(config['port'])
+			self.username = config['username']
+			self.password = config['password']
+			self.ssl = (config['ssl'] == 'True')
+			self.apop = (config['apop'] == 'True')
+		except:
+			self.server = 'localhost'
+			self.port = 143
+			self.username = ''
+			self.password = ''
+			self.ssl = False
+			self.apop = False
 
 		self.uidls = []  # list of uidls from last check
 		# save this to a file to prevent all messages being 'new' at startup

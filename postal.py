@@ -64,7 +64,7 @@ CHECKERS = {
 
 
 class Postal(applet.Applet):
-	"""An Applet (no, really)"""
+	"""A Mail Checking Applet"""
 
 	def __init__(self, id):
 		"""Initialize applet."""
@@ -127,12 +127,33 @@ class Postal(applet.Applet):
 			self.mailboxes.append(CHECKERS[config['protocol']](config))
 
 
-	def edit_accounts(self):
-		"""Edit the accounts config file (just a text editor for now)"""
+	def save_accounts(self):
 		filename = os.path.join(basedir.save_config_path(APP_SITE, APP_NAME), APP_CFG)
 		if not os.access(filename, os.R_OK or os.W_OK):
-			os.system("cp %s %s" % (os.path.join(APP_DIR, APP_CFG), filename))
-		rox.filer.spawn_rox((filename,))
+			raise IOError
+		cfg = ConfigParser.ConfigParser()
+
+		for mb in self.mailboxes:
+			cfg.add_section(mb.name)
+			for key in mb.__dict__:
+				if key in ['server', 'name', 'protocol', 'folders', 'polltime',
+						   'username', 'password', 'port', 'ssl', 'apop', 'filename']:
+					value = mb.__dict__[key] 
+					if isinstance(value, list):
+						cfg.set(mb.name, key, ','.join(value))
+					else:
+						cfg.set(mb.name, key, value)
+
+		cfg.write(open(filename, 'w'))		
+
+
+	def edit_accounts(self):
+		"""Edit the accounts list and save to the config file."""
+		import accounts
+		dlg = accounts.AccountList(self.mailboxes)
+		dlg.run()
+		dlg.destroy()
+		self.save_accounts()
 
 
 	def check_mail(self):

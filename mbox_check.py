@@ -9,9 +9,13 @@ import mailbox, re
 
 from checker import Checker
 class MBOXChecker(Checker):
-	def __init__(self, config):
+	def __init__(self, config=None):
 		Checker.__init__(self, config)
-		self.filename = config['filename']
+		self.protocol = 'MBOX'
+		try:
+			self.filename = config['filename']
+		except:
+			self.filename = 'none'
 
 	def check(self):
 		count = 0

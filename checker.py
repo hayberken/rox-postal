@@ -7,9 +7,13 @@
 
 class Checker:	
 	def __init__(self, config):
-		self.name = config['name']
-		self.protocol = config['protocol']
-		self.polltime = int(config['polltime'])
+		try:
+			self.name = config['name']
+			self.polltime = int(config['polltime'])
+		except:
+			self.name = ''
+			self.polltime = 10
+
 		self.blocker = None
 		self.results = ""
 		self.unseen = 0
