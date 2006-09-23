@@ -1,7 +1,3 @@
 TODO items for Postal
 
-* Support multiple accounts? (done)
-* Supprt POP mailboxes? (done)
-* Support local (/var/mail/) accounts? (done)
-
-* Account editor
+* Protect against stuck socket I/O (timeout?)

@@ -128,22 +128,19 @@ class Postal(applet.Applet):
 
 
 	def save_accounts(self):
-		filename = os.path.join(basedir.save_config_path(APP_SITE, APP_NAME), APP_CFG)
-		if not os.access(filename, os.R_OK or os.W_OK):
-			raise IOError
 		cfg = ConfigParser.ConfigParser()
-
 		for mb in self.mailboxes:
 			cfg.add_section(mb.name)
 			for key in mb.__dict__:
-				if key in ['server', 'name', 'protocol', 'folders', 'polltime',
+				if not key in ['server', 'name', 'protocol', 'folders', 'polltime',
 						   'username', 'password', 'port', 'ssl', 'apop', 'filename']:
-					value = mb.__dict__[key] 
-					if isinstance(value, list):
-						cfg.set(mb.name, key, ','.join(value))
-					else:
-						cfg.set(mb.name, key, value)
-
+					continue
+				value = mb.__dict__[key] 
+				if isinstance(value, list):
+					cfg.set(mb.name, key, ','.join(value))
+				else:
+					cfg.set(mb.name, key, value)
+		filename = os.path.join(basedir.save_config_path(APP_SITE, APP_NAME), APP_CFG)
 		cfg.write(open(filename, 'w'))		
 
 

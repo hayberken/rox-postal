@@ -11,39 +11,7 @@ If dbus, notification-daemon and pynotify are installed, you get nice popup
 messages when new mail arrives.
 
 Currently three account types are supported: IMAP4, POP3 and MBOX (local file)
-The accounts are stored in an INI file using the following format.
-
-[0]
-name: ImapAccount
-protocol: IMAP
-server: imap.myserver.com
-port: 143
-ssl: False
-username: myname
-password: mypassword
-folders: Inbox,Other,Folder,Names
-polltime: 2
-
-[1]
-name: PopAccount
-protocol: POP
-server: pop.myisp.com
-port: 110
-ssl: False
-apop: False
-username: myname
-password: mypassword
-polltime: 10
-
-[2]
-name: LocalMail
-protocol: MBOX
-filename: /var/spool/mail/username
-polltime: 10
-
-The [section] names can be anything, they don't have to be numbers.
-If there is any problem with the Accounts.ini file, the file is opened in the
-default text editor.  If the file is missing, a template is created and opened.
+The accounts are stored in an INI file (see Accounts.ini for an example).
 
 
 See the TODO file for possible future additions.

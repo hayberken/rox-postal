@@ -21,7 +21,7 @@ class POPChecker(Checker):
 			self.apop = (config['apop'] == 'True')
 		except:
 			self.server = 'localhost'
-			self.port = 143
+			self.port = 110
 			self.username = ''
 			self.password = ''
 			self.ssl = False

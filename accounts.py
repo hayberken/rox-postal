@@ -13,26 +13,13 @@ class AccountEditor(rox.Dialog):
 		rox.Dialog.__init__(self)
 		self.set_title(_('Account Editor'))
 		self.set_size_request(300, -1)
-
 		self.account = account
-
 		self.table = gtk.Table(2, 4)
 		self.vbox.add(self.table)
-
 		self.add_str(_('Name: '), 'name', account.name)
 		self.add_int(_('Poll Time: '), 'polltime', account.polltime)
-
 		self.add_button(gtk.STOCK_OK, gtk.RESPONSE_OK)
 		self.set_default_response(gtk.RESPONSE_OK)
-
-		def response(self, resp):
-			if resp == gtk.RESPONSE_OK:
-				self.save()
-			self.destroy()
-		self.connect('response', response)
-
-	def save(self):
-		pass
 
 	def add_row(self, label, widget):
 		n = self.last_row
@@ -118,8 +105,6 @@ class AccountList(rox.Dialog):
 		rox.Dialog.__init__(self)
 		self.set_title(_('Postal: Account Editor'))
 
-		self.accounts = accounts
-
 		hbox = gtk.HBox()
 		self.vbox.pack_start(hbox)
 		swin = gtk.ScrolledWindow()
@@ -137,7 +122,9 @@ class AccountList(rox.Dialog):
 		view.append_column(gtk.TreeViewColumn(_('Type'), gtk.CellRendererText(), text=1))
 		view.connect('row-activated', self.select_row)
 		swin.add(view)
+
 		self.view = view
+		self.accounts = accounts
 
 		def response(self, resp):
 			if resp == EDIT:
@@ -161,20 +148,18 @@ class AccountList(rox.Dialog):
 		self.vbox.show_all()
 		self.action_area.show_all()
 	
-	def select_row(self, list, row, *stuff):
+	def select_row(self, list, path, *stuff):
 		model = list.get_model()
-		iter = model.get_iter(row)
-		account = model.get_value(iter, 2)
+		row = model.get_iter(path)
+		account = model.get_value(row, 2)
 		self.edit_account(account)
 
 	def add(self):
-		#choose BOX type
 		items = []
 		items.append(Menu.Action(_('IMAP'), 'add_account', None, None, ('IMAP',)))
 		items.append(Menu.Action(_('POP'), 'add_account', None, None, ('POP',)))
 		items.append(Menu.Action(_('MBOX'), 'add_account', None, None, ('MBOX',)))
 		menu = Menu.Menu('choose', items)
-
 		menu.attach(self, self)
 		menu.popup(self, None)
 
@@ -190,21 +175,20 @@ class AccountList(rox.Dialog):
 			account = mbox_check.MBOXChecker()
 		else:
 			return
-
-		if self.edit_account(account):
-			self.accts.append([account.name, account.protocol, account])
-			self.accounts.append(account)
+		self.accts.append([account.name, account.protocol, account])
+		self.accounts.append(account)
 
 	def remove(self):
-		model, iter = self.view.get_selection().get_selected()
-		path = model.get_path(iter)
-		model.remove(iter)
+		model, row = self.view.get_selection().get_selected()
+		path = model.get_path(row)
+		model.remove(row)
 		del self.accounts[path[0]]
 
 	def edit(self):
-		model, iter = self.view.get_selection().get_selected()
-		account = model.get_value(iter, 2)
+		model, row = self.view.get_selection().get_selected()
+		account = model.get_value(row, 2)
 		self.edit_account(account)
+		model.set(row, 0, account.name, 1, account.protocol, 2, account)
 
 	def edit_account(self, account):
 		if account.protocol == 'IMAP':
@@ -213,6 +197,8 @@ class AccountList(rox.Dialog):
 			dlg = MBOXEditor(account)
 		elif account.protocol == 'POP':
 			dlg = POPEditor(account)
+		dlg.set_transient_for(self)
+		dlg.set_modal(True)
 		dlg.run()
-		return True
+		dlg.destroy()
 
