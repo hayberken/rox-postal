@@ -175,6 +175,7 @@ class AccountList(rox.Dialog):
 			account = mbox_check.MBOXChecker()
 		else:
 			return
+		self.edit_account(account)
 		self.accts.append([account.name, account.protocol, account])
 		self.accounts.append(account)
 
@@ -197,6 +198,8 @@ class AccountList(rox.Dialog):
 			dlg = MBOXEditor(account)
 		elif account.protocol == 'POP':
 			dlg = POPEditor(account)
+		else:
+			return
 		dlg.set_transient_for(self)
 		dlg.set_modal(True)
 		dlg.run()

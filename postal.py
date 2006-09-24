@@ -19,6 +19,9 @@
 """
 
 # standard library modules
+import socket
+socket.setdefaulttimeout(5) #set a reasonable timeout for imaplib & poplib
+
 import sys, os, time, gtk, gobject, rox, getpass, popen2, ConfigParser
 from rox import applet, filer, tasks, basedir
 from rox.options import Option
