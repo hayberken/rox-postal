@@ -1,0 +1,175 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+# 
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2006-10-31 07:11-0800\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: Konstantin Korikov <lostclus@ua.fm>\n"
+"Language-Team: Ukrainian\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: accounts.py:14
+msgid "Account Editor"
+msgstr "Редактор облікового запису"
+
+#: accounts.py:19
+msgid "Name: "
+msgstr "Ім'я: "
+
+#: accounts.py:20
+msgid "Poll Time (minutes): "
+msgstr "Період (в хвилинах)"
+
+#: accounts.py:77
+msgid "MBOX Account Editor"
+msgstr "Редактор облікового запису MBOX"
+
+#: accounts.py:78
+msgid "Path: "
+msgstr "Шлях: "
+
+#: accounts.py:84
+msgid "IMAP Account Editor"
+msgstr "Редактор облікового запису IMAP"
+
+#: accounts.py:85 accounts.py:97
+msgid "Server: "
+msgstr "Сервер: "
+
+#: accounts.py:86 accounts.py:98
+msgid "Port: "
+msgstr "Порт: "
+
+#: accounts.py:87 accounts.py:99
+msgid "Username: "
+msgstr "Ім'я користувача: "
+
+#: accounts.py:88 accounts.py:100
+msgid "Password: "
+msgstr "Пароль: "
+
+#: accounts.py:89
+msgid "Folders: "
+msgstr "Папки: "
+
+#: accounts.py:90 accounts.py:101
+msgid "SSL: "
+msgstr "SSL: "
+
+#: accounts.py:96
+msgid "POP Account Editor"
+msgstr "Редактор облікового запису POP"
+
+#: accounts.py:102
+msgid "APOP: "
+msgstr "APOP: "
+
+#: accounts.py:109
+msgid "Postal: Account Editor"
+msgstr "Postal: Редактор облікового запису"
+
+#: accounts.py:124
+msgid "Name"
+msgstr "Ім'я"
+
+#: accounts.py:125
+msgid "Type"
+msgstr "Тип"
+
+#: accounts.py:162
+msgid "IMAP"
+msgstr "IMAP"
+
+#: accounts.py:163
+msgid "POP"
+msgstr "POP"
+
+#: accounts.py:164
+msgid "MBOX"
+msgstr "MBOX"
+
+#: imap_check.py:39 pop_check.py:48
+msgid "Login Error"
+msgstr "Помилка авторизації"
+
+#: postal.py:109
+msgid "Problem loading accounts.  Launching Account Editor..."
+msgstr ""
+"Проблема при завантажені облікових записів. Запускається редактор облікових "
+"записів..."
+
+#: postal.py:207
+msgid "No Mail"
+msgstr "Нема пошти"
+
+#: postal.py:218
+msgid "New Mail has arrived."
+msgstr "Надійшла нова пошта."
+
+#: postal.py:220
+msgid "Read Mail"
+msgstr "Читати пошту"
+
+#: postal.py:311
+msgid "Check mail"
+msgstr "Перевірити пошту"
+
+#: postal.py:312
+msgid "Mail Client"
+msgstr "Поштовий клієнт"
+
+#: postal.py:314
+msgid "Options..."
+msgstr "Параметри..."
+
+#: postal.py:315
+msgid "Accounts..."
+msgstr "Облікові записи..."
+
+#: postal.py:316
+msgid "Reload..."
+msgstr ""
+
+#: postal.py:318
+msgid "Close"
+msgstr "Закрити"
+
+#: AppRun:19 AppletRun:14
+msgid ""
+"This is a panel applet.  Drag it to your panel to run it.\n"
+"I'll now let you edit the configuration options..."
+msgstr ""
+"Це аплет панелі. Щоб запустити перетягніть його до вашої панелі.\n"
+"Зараз Вам буде запропоновано змінити параметри конфігурації..."
+
+#: Options.xml:3
+msgid "Postal"
+msgstr "Postal"
+
+#: Options.xml:4
+msgid "Mail application"
+msgstr "Поштовий клієнт"
+
+#: Options.xml:6
+msgid ""
+"The command to run your mail client (e.g. thunderbird, evolution, mozilla, "
+"etc.)"
+msgstr ""
+"Команда запуску вашого поштового клієнта (наприклад, thunderbird, evolution, "
+"mozilla)"
+
+#: Options.xml:7
+msgid "Sound"
+msgstr "Звук"
+
+#: Options.xml:9
+msgid "Command to play a sound when new mail arrives."
+msgstr "Команда для програвання звуку коли надходить нова пошта."
