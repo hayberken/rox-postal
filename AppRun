@@ -12,15 +12,25 @@ try:
 	parser.add_option("--options",
 		action="store_true", dest="options", default=False,
 		help="display options dialog")
+
+	parser.add_option("--accounts",
+		action="store_true", dest="accounts", default=False,
+		help="edit accounts list")
 		
 	(options, args) = parser.parse_args()
 
-	if not options.options:
-		rox.info(_("This is a panel applet.  Drag it to your panel to run it.\nI'll now let you edit the configuration options..."))
-
-	import postal
-	rox.edit_options()
-	rox.mainloop()
+	if options.options:
+		import postal
+		rox.edit_options()
+		rox.mainloop()
+	elif options.accounts:
+		import postal
+		box = postal.Postal(-1)  #don't fully initialize the applet
+		box.load_accounts()
+		box.edit_accounts()
+		rox.mainloop()
+	else:
+		rox.info(_("This is a panel applet.  Drag it to your panel to run it."))
 
 except:
 	rox.report_exception()

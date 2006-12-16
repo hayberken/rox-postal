@@ -71,6 +71,9 @@ class Postal(applet.Applet):
 
 	def __init__(self, id):
 		"""Initialize applet."""
+		if id == -1:
+			return  # to support --accounts option
+
 		applet.Applet.__init__(self, id)
 
 		# load the applet icon

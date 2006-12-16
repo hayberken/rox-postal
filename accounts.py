@@ -17,7 +17,9 @@ class AccountEditor(rox.Dialog):
 		self.table = gtk.Table(2, 4)
 		self.vbox.add(self.table)
 		self.add_str(_('Name: '), 'name', account.name)
-		self.add_int(_('Poll Time: '), 'polltime', account.polltime)
+		self.add_num(_('Poll Time (minutes): '), 'polltime',
+			account.polltime, min = 0.1, max = 1440.0,
+			step = 0.1, page = 1, digits = 1)
 		self.add_button(gtk.STOCK_OK, gtk.RESPONSE_OK)
 		self.set_default_response(gtk.RESPONSE_OK)
 
@@ -27,15 +29,16 @@ class AccountEditor(rox.Dialog):
 		self.table.attach(widget, 1, 2, n, n+1, gtk.EXPAND|gtk.FILL, 0)
 		self.last_row += 1
 
-	def add_int(self, label, name, value, min=1, max=65535, step=1, page=10):
+	def add_num(self, label, name, value, min=1, max=65535, step=1, page=10, digits = 0):
 		entry = gtk.SpinButton()
 		entry.set_range(min, max)
 		entry.set_increments(step, page)
+		entry.set_digits(digits)
 		entry.set_value(value)
-		entry.connect('value-changed', self.set_int, name)
+		entry.connect('value-changed', self.set_num, name)
 		self.add_row(label, entry)
 
-	def set_int(self, widget, name):
+	def set_num(self, widget, name):
 		self.account.__dict__[name] = widget.get_value()
 	
 	def add_str(self, label, name, value, visible=True):
@@ -80,7 +83,7 @@ class IMAPEditor(AccountEditor):
 		AccountEditor.__init__(self, account)
 		self.set_title(_('IMAP Account Editor'))
 		self.add_str(_('Server: '), 'server', account.server)
-		self.add_int(_('Port: '), 'port', account.port, 1, 65535, 1, 100)
+		self.add_num(_('Port: '), 'port', account.port, 1, 65535, 1, 100)
 		self.add_str(_('Username: '), 'username', account.username)
 		self.add_str(_('Password: '), 'password', account.password, False)
 		self.add_list(_('Folders: '), 'folders', account.folders)
@@ -92,7 +95,7 @@ class POPEditor(AccountEditor):
 		AccountEditor.__init__(self, account)
 		self.set_title(_('POP Account Editor'))
 		self.add_str(_('Server: '), 'server', account.server)
-		self.add_int(_('Port: '), 'port', account.port, 1, 65535, 1, 100)
+		self.add_num(_('Port: '), 'port', account.port, 1, 65535, 1, 100)
 		self.add_str(_('Username: '), 'username', account.username)
 		self.add_str(_('Password: '), 'password', account.password, False)
 		self.add_bool(_('SSL: '), 'ssl', account.ssl)

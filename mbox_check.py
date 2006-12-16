@@ -6,6 +6,7 @@
 """
 
 import mailbox, re
+import os
 
 from checker import Checker
 class MBOXChecker(Checker):
@@ -15,7 +16,7 @@ class MBOXChecker(Checker):
 		try:
 			self.filename = config['filename']
 		except:
-			self.filename = 'none'
+			self.filename = os.getenv('MAIL', 'none')
 
 	def check(self):
 		count = 0

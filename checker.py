@@ -9,10 +9,10 @@ class Checker:
 	def __init__(self, config):
 		try:
 			self.name = config['name']
-			self.polltime = int(config['polltime'])
+			self.polltime = float(config['polltime'])
 		except:
 			self.name = ''
-			self.polltime = 10
+			self.polltime = 10.0
 
 		self.blocker = None
 		self.results = ""

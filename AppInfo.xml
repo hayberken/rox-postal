@@ -4,6 +4,9 @@
 		<Item option="--options">
 			<Label xml:lang="en">Options...</Label>
 		</Item>
+		<Item option="--accounts">
+			<Label xml:lang="en">Accounts...</Label>
+		</Item>
 	</AppMenu>
 	<Summary>Mailbox Checker</Summary>
 	<About>

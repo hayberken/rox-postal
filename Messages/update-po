@@ -3,15 +3,18 @@
 echo Extracting messages from source files...
 echo
 
-python ./make_tips
-(cd ..; pygettext AppRun *.py tips)
+(
+  cd ..
+  xgettext -o - -L Python *.py AppRun AppletRun |
+  sed "s/charset=CHARSET/charset=UTF-8/" > pot.tmp
+  echo >> pot.tmp
+  python Messages/opts2po.py Options.xml >> pot.tmp
+  msguniq -o Messages/messages.pot pot.tmp
+  rm pot.tmp
+)
 
 echo
 echo Updating all .po files...
 echo
 
-for FILE in *.po; do
-	echo -n "Updating '$FILE' translation"
-	mv $FILE $FILE.old
-	msgmerge $FILE.old ../messages.pot > $FILE
-done
+find . -name \*.po -exec msgmerge -U \{\} messages.pot \;
