@@ -56,7 +56,9 @@ class IMAPChecker(Checker):
 			else:
 				count = -1
 			if count == -1:
+				self.results += "  %s (Error)\n" % (folder,)
 				yield None #let someone else run for a while
+				continue
 	
 			result = im.search(None, "UNSEEN")
 			if result[0] == 'OK':
