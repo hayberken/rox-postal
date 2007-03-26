@@ -5,7 +5,7 @@
 	All rights reserved.
 """
 
-import imaplib, sys
+import imaplib, sys, socket
 from checker import Checker
 
 class IMAPChecker(Checker):
@@ -47,7 +47,14 @@ class IMAPChecker(Checker):
 		
 		for folder in self.folders:
 			folder = folder.strip()
-			result = im.select(folder, readonly=True)
+
+			try:
+				result = im.select(folder, readonly=True)
+			except socket.timeout:
+				self.results += "  %s (Timeout)\n" % (folder,)
+				yield None #let someone else run for a while
+				continue
+
 			if result[0] == 'OK':
 				if result[1][0] == '':
 					count = 0

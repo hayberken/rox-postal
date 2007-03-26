@@ -221,6 +221,8 @@ class Postal(applet.Applet):
 				n = pynotify.Notification(_("New Mail has arrived."), 
 								mailbox.results.strip(), "mail-message-new")
 				n.add_action("mailer", _("Read Mail"), self.run_it)
+				n.attach_to_widget(self)
+				n.set_category("email.arrived")
 				n.show()
 			if len(SOUND.value):
 				Task(self.play_sound())
