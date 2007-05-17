@@ -11,7 +11,7 @@
 	<Summary>Mailbox Checker</Summary>
 	<About>
 		<Purpose>An applet to monitor multiple mailboxes</Purpose>
-		<Version>003</Version>
+		<Version>005</Version>
 		<Authors>Ken Hayber</Authors>
 		<License>GNU General Public License</License>
 		<Homepage>http://www.hayber.us/rox/Postal</Homepage>

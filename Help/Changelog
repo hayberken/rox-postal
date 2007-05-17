@@ -1,5 +1,9 @@
 Postal - an email checker applet for the ROX Panel
 2007-03-25 Ken Hayber <ken@hayber.us>
+	Version 004
+	* Attach notification popup to widget
+	* Improved notification updates
+	* Catch timeout exceptions and show in tooltip
 
 2006-09-24 Ken Hayber <ken@hayber.us>
 	Version 003
@@ -13,7 +17,7 @@ Postal - an email checker applet for the ROX Panel
 2006-01-17 Ken Hayber <ken@hayber.us>
 	Version 002
 	* Pass readonly=True to IMAP4.select() command.  Without this, another 
-connection may take over the mailbox and raise an exception.
+	  connection may take over the mailbox and raise an exception.
 	* Add option to play sound when new mail arrives. 
 
 2005-12-31 Ken Hayber <ken@hayber.us>

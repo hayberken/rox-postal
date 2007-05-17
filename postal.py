@@ -85,6 +85,7 @@ class Postal(applet.Applet):
 		self.size = 0
 		self.resize_image(8)
 		self.add(self.image)
+		self.notify = None
 		
 		self.vertical = self.get_panel_orientation() in ('Right', 'Left')
 		if self.vertical:
@@ -218,12 +219,15 @@ class Postal(applet.Applet):
 
 		if mailbox.unseen > mailbox.prev_total:
 			if HAVE_NOTIFY:
+				if self.notify:
+					self.notify.close()
 				n = pynotify.Notification(_("New Mail has arrived."), 
-								mailbox.results.strip(), "mail-message-new")
+								results.strip(), "mail-message-new")
 				n.add_action("mailer", _("Read Mail"), self.run_it)
 				n.attach_to_widget(self)
 				n.set_category("email.arrived")
 				n.show()
+				self.notify = n
 			if len(SOUND.value):
 				Task(self.play_sound())
 		
