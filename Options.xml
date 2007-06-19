@@ -7,5 +7,8 @@
     <entry name='sound' label='Sound'>
       Command to play a sound when new mail arrives.
     </entry>
+	<numentry name='timeout' label='Network timeout:' min='5' max='300' step='1'>
+	   	The timeout for network socket connections in seconds.
+	</numentry>
   </section>
 </options>

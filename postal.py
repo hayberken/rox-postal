@@ -20,7 +20,6 @@
 
 # standard library modules
 import socket
-socket.setdefaulttimeout(5) #set a reasonable timeout for imaplib & poplib
 
 import sys, os, time, gtk, gobject, rox, getpass, popen2, ConfigParser
 from rox import applet, filer, tasks, basedir
@@ -52,10 +51,12 @@ Menu.set_save_name(APP_NAME, site=APP_SITE)
 #Options go here
 MAILER = Option('mailer', 'thunderbird')
 SOUND = Option('sound', '')
+TIMEOUT = Option('timeout', 30)
 
 #Enable notification of options changes
 rox.app_options.notify()
 
+socket.setdefaulttimeout(TIMEOUT.int_value) #set a timeout for imaplib & poplib
 
 #Configure mailbox handling
 import imap_check, pop_check, mbox_check
