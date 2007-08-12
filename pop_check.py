@@ -32,6 +32,7 @@ class POPChecker(Checker):
 
 	def check(self):
 		self.unseen = 0
+		self.errors = 0
 
 		try:
 			if self.ssl:
@@ -47,6 +48,7 @@ class POPChecker(Checker):
 		except:
 			self.results = "%s (%s)\n" % (self.name, _('Login Error'))
 			self.blocker.trigger()
+			self.errors += 1
 			return
 
 		# get list of unique message ids

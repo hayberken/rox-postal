@@ -18,6 +18,7 @@ class Checker:
 		self.results = ""
 		self.unseen = 0
 		self.prev_total = 0
+		self.errors = 0
 
 	def check(self):
 		yield None

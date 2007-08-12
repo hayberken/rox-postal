@@ -29,7 +29,7 @@ class AccountEditor(rox.Dialog):
 		self.table.attach(widget, 1, 2, n, n+1, gtk.EXPAND|gtk.FILL, 0)
 		self.last_row += 1
 
-	def add_num(self, label, name, value, min=1, max=65535, step=1, page=10, digits = 0):
+	def add_num(self, label, name, value, min=1, max=65535, step=1, page=10, digits=0):
 		entry = gtk.SpinButton()
 		entry.set_range(min, max)
 		entry.set_increments(step, page)
@@ -39,7 +39,10 @@ class AccountEditor(rox.Dialog):
 		self.add_row(label, entry)
 
 	def set_num(self, widget, name):
-		self.account.__dict__[name] = widget.get_value()
+		if widget.get_digits() == 0:
+			self.account.__dict__[name] = widget.get_value_as_int()
+		else:
+			self.account.__dict__[name] = widget.get_value()
 	
 	def add_str(self, label, name, value, visible=True):
 		entry = gtk.Entry()

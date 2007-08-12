@@ -14,7 +14,7 @@ class IMAPChecker(Checker):
 		self.protocol = 'IMAP'
 		try:
 			self.server = config['server']
-			self.port = int(config['port'])
+			self.port = int(float(config['port']))
 			self.ssl = (config['ssl'] == 'True')
 			self.username = config['username']
 			self.password = config['password']
@@ -29,6 +29,7 @@ class IMAPChecker(Checker):
 
 	def check(self):
 		"""Check all folders"""
+		self.errors = 0
 		try:
 			if self.ssl:
 				im = imaplib.IMAP4_SSL(self.server, self.port)
@@ -38,6 +39,7 @@ class IMAPChecker(Checker):
 		except:
 			self.results = "%s (%s)\n" % (self.name, _('Login Error'))
 			self.blocker.trigger()
+			self.errors += 1
 			return
 
 		yield None #let someone else run for a while
@@ -52,6 +54,7 @@ class IMAPChecker(Checker):
 				result = im.select(folder, readonly=True)
 			except socket.timeout:
 				self.results += "  %s (Timeout)\n" % (folder,)
+				self.errors += 1
 				yield None #let someone else run for a while
 				continue
 
@@ -76,6 +79,7 @@ class IMAPChecker(Checker):
 					self.unseen += unseen
 			else:
 				unseen = -1
+				self.errors += 1
 			if unseen > 0:
 				self.results += "  %s (%d/%d)\n" % (folder, unseen, count)
 			yield None #let someone else run for a while

@@ -202,17 +202,21 @@ class Postal(applet.Applet):
 
 	def update(self, mailbox):
 		"""Update the display"""
-		unseen = 0			
+		unseen = 0
+		errors = 0			
 		results = ""
 		for box in self.mailboxes:
 			results += box.results
 			unseen += box.unseen
+			errors += box.errors
 
 		if not len(results):
 			results = _("No Mail")
 		self.tooltips.set_tip(self, results.strip(), tip_private=None)
 
-		if unseen:
+		if errors:
+			self.pixbuf = self.errimg
+		elif unseen:
 			self.pixbuf = self.ismail
 		else:
 			self.pixbuf = self.nomail
